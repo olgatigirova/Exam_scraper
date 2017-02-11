@@ -1,4 +1,3 @@
-const config = require('config');
 const got = require('got');
 const cheerio = require('cheerio');
 const log = require('../log');
@@ -6,16 +5,13 @@ const log = require('../log');
 class SearchEngine {
 
   constructor(levelMax) {
+    this.levelMax = levelMax;
     this.result = '';
     this.AllUrls = new Set();
-    if (levelMax > 0)
-      this.levelMax = levelMax;
-    else
-      this.levelMax = config.levelDeafult;
   }
 
-  *SearchDomByUrl(url_str, element, levelCurrent=1) {
-    log.info('=== level: ', levelCurrent, ', element: ', element, ', search url: ', url_str);
+  *SearchDomByUrl(url_str, element, levelCurrent = 1) {
+    log.info(`=== level: ${levelCurrent} (max ${this.levelMax}), element: ${element}, search url: ${url_str}`);
     let $;
 
     if (levelCurrent <= this.levelMax) {
@@ -38,7 +34,7 @@ class SearchEngine {
       let foundEl = $(el).html().toString();
       foundEl = foundEl.replace(/[\n\r]/g, '').replace(/\s+/g, " ");
       this.result += `[${foundEl}],`;
-      log.verbose('---found tag: ', foundEl);
+      log.verbose('--- found tag: ', foundEl);
     });
   }
 
@@ -56,7 +52,7 @@ class SearchEngine {
         }
       }
     });
-    log.verbose('urls = ', urls);
+    log.verbose('--- urls = ', urls);
     return urls;
   }
 }

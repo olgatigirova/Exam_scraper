@@ -1,56 +1,59 @@
 const co = require('co');
-const config = require('config');
-const Promise = require('bluebird');
-const redis = require('redis');
-Promise.promisifyAll(redis.RedisClient.prototype);
-Promise.promisifyAll(redis.Multi.prototype);
 const log = require('../log');
-const SearchEngine = require('./search_engine').SearchEngine;
-
-let redisClientInstance;
+const helper = require('./search_helper');
 
 module.exports = {
-    searchDom
+    searchDom,
+    listSearchRequests,
+    deleteSearchRequest
 };
 
 function searchDom() {
     return function (req, res, next) {
-        co(searchDomGen(req, res, next))
-        .then(res => {
-            req.search_res = res;
-            next();
-        })
-        .catch(err => {
-            log.error('err = ', err);
-            res.status(500).send(err);
-        });
+        co(helper.searchDomGen(req))
+            .then(result => {
+                req.search_res = result;
+                log.info('search result: ', result);
+                next();
+            })
+            .catch(err => {
+                log.error('err = ', err.message);
+                res.status(500).send(err.message);
+            });
     };
 }
 
-function* searchDomGen(req, res, next) {
-    const url_str = req.query.url;
-    const element = req.query.element;
-    const level = req.query.level;
-
-    const search = new SearchEngine(level);
-    const foundElements = yield* search.SearchDomByUrl(url_str, element);
-    
-    //save found info into redis
-    const searchKey = `{ url: ${url_str}, element: ${element}, level: ${level} }`;
-
-    return foundElements;
+function listSearchRequests() {
+    return function (req, res, next) {
+        co(helper.listSearchReqsGen(req))
+            .then(result => {
+                req.search_res = result;
+                log.info('search history: ', result);
+                next();
+            })
+            .catch(err => {
+                log.error('err = ', err.message);
+                res.status(500).send(err.message);
+            });
+    };
 }
 
-function redisClient() {
-    return new Promise((resolve, reject) => {
-        if (redisClientInstance && redisClientInstance.connected) {
-            return resolve(redisClientInstance);
-        }
-        const client = redis.createClient(config.redisOptions);
-        client.on('error', reject);
-        client.on('connect', () => {
-            redisClientInstance = client;
-            return resolve(client);
-        });
-    });
+function deleteSearchRequest() {
+    return function (req, res, next) {
+        co(helper.DelSearchKeyGen(req))
+            .then(result => {
+                if (result) {
+                    log.info('search key is deleted: ', searchKey);
+                    res.status(200).send('The search request is deleted.');
+                }
+                else {
+                    log.info('deleted search key is not found: ', searchKey);
+                    res.status(404).send('The search request is not found. DELETE failed');
+                }
+            })
+            .catch(err => {
+                log.error('err = ', err.message);
+                res.status(500).send(err.message);
+            });
+    };
 }

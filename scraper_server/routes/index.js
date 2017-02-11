@@ -8,17 +8,16 @@ const searchCtrl = require('../controllers/search');
 router.use(bodyParser.json());
 router.use(bodyParser.urlencoded({ extended: true })); 
 
-/*router.get('/api/search/list/',
-  listSearches(),
+router.get('/api/search/list/',
+  searchCtrl.listSearchRequests(),
   function(req, res) {
-    res.status(200).json({ duplicate: !req.file });
+    res.status(200).json(req.search_res);
   }
-);*/
+);
 
 router.get('/api/search/',
   searchCtrl.searchDom(),
   function(req, res) {
-    log.info('search result: ', req.search_res);
     res.status(200).json({data: req.search_res});
   }
 );
@@ -38,11 +37,8 @@ router.post('/api/search/',
   }
 );
 
-/*router.delete('/api/search/',
-  deleteSearch(),
-  function(req, res) {
-    res.status(200).send('<h3>Request is deleted</h3>');
-  }
-);*/
+router.delete('/api/search/',
+  searchCtrl.deleteSearchRequest()
+);
 
 module.exports = router;
