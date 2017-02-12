@@ -1,0 +1,161 @@
+---
+swagger: "2.0"
+info:
+  description: "API for scraper server"
+  version: "1.0.0"
+  title: "Scraper API"
+host: "localhost:3000"
+schemes:
+- "http"
+produces:
+- "application/json"
+paths:
+  /:
+    get:
+      tags:
+      - "/"
+      summary: "Provide search from"
+      description: "Get Search URL form"
+      operationId: "getForm"
+      parameters: []
+      responses:
+        200:
+          description: "Form is sent"
+      x-swagger-router-controller: "search"
+  /api/search/:
+    get:
+      tags:
+      - "/api/search/"
+      summary: "Search dom"
+      description: "Search dom elements by URL.\n"
+      operationId: "searchDom"
+      parameters:
+      - name: "url"
+        in: "query"
+        description: "URL to search."
+        required: true
+        type: "string"
+      - name: "element"
+        in: "query"
+        description: "Element to search."
+        required: true
+        type: "string"
+      - name: "level"
+        in: "query"
+        description: "Search depth level."
+        required: false
+        type: "integer"
+        default: 2
+      responses:
+        200:
+          description: "An array of found elements"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/Search"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "search"
+    post:
+      tags:
+      - "/api/search/"
+      summary: "Search form processing"
+      description: "Search URL using form"
+      operationId: "searchWithForm"
+      parameters:
+      - in: "body"
+        name: "body"
+        description: "search body parameters"
+        required: true
+        schema:
+          $ref: "#/definitions/SearchBody"
+      responses:
+        200:
+          description: "Search is accepted"
+      x-swagger-router-controller: "search"
+    delete:
+      tags:
+      - "/api/search/"
+      summary: "Delete search request"
+      description: "Delete search request"
+      operationId: "deleteSearchRequest"
+      parameters:
+      - name: "url"
+        in: "query"
+        description: "URL to search."
+        required: true
+        type: "string"
+      - name: "element"
+        in: "query"
+        description: "Element to search."
+        required: true
+        type: "string"
+      - name: "level"
+        in: "query"
+        description: "Search depth level."
+        required: false
+        type: "integer"
+        default: 2
+      responses:
+        200:
+          description: "Search is deleted"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "search"
+  /api/search/list/:
+    get:
+      tags:
+      - "/api/search/list/"
+      summary: "List of  search requests"
+      description: "The /api/search/list/ endpoint returns history of all search requests\
+        \ executed\n"
+      operationId: "listSearchRequests"
+      parameters: []
+      responses:
+        200:
+          description: "An array of search requests"
+          schema:
+            type: "array"
+            items:
+              $ref: "#/definitions/List"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
+      x-swagger-router-controller: "search"
+definitions:
+  List:
+    type: "string"
+    description: "Search history."
+  Search:
+    type: "object"
+    properties:
+      data:
+        type: "string"
+        description: "Found elements."
+  SearchBody:
+    required:
+    - "element"
+    - "level"
+    - "url"
+    properties:
+      url:
+        type: "string"
+        description: "url to search"
+      element:
+        type: "string"
+        description: "element to search"
+      level:
+        type: "string"
+        description: "search depth"
+    description: "Search object"
+  Error:
+    type: "object"
+    properties:
+      error:
+        type: "string"
+        description: "Error message."
