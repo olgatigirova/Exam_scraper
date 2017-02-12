@@ -37,7 +37,7 @@ function listSearchRequests(req, res, next) {
 }
 
 function deleteSearchRequest(req, res, next) {
-    co(helper.DelSearchKeyGen(req.swagger.params))
+    co(helper.delSearchKeyGen(req.swagger.params))
         .then(result => {
             if (result) {
                 res.status(200).send('The search request is deleted.');

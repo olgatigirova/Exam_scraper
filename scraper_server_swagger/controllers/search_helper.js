@@ -12,7 +12,7 @@ const SEARCH_HISTORY_KEY = 'searchHistory';
 module.exports = {
     searchDomGen,
     listSearchReqsGen,
-    DelSearchKeyGen,
+    delSearchKeyGen,
     processFormData
 };
 
@@ -47,7 +47,7 @@ function* listSearchReqsGen() {
     return result;
 }
 
-function* DelSearchKeyGen(args) {
+function* delSearchKeyGen(args) {
     let searchKey;
     let keyExists = 0;
     let result = false;
