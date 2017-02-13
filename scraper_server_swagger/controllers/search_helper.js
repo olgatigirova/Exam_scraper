@@ -13,7 +13,9 @@ module.exports = {
     searchDomGen,
     listSearchReqsGen,
     delSearchKeyGen,
-    processFormData
+    processFormData,
+    parseQuery,
+    redisClient
 };
 
 function* searchDomGen(args) {
@@ -65,6 +67,19 @@ function* delSearchKeyGen(args) {
     return result;
 }
 
+function processFormData(req) {
+    const data = req.body;
+    let   url_str = '';
+    let   level = config.search.levelDefault;
+    if (data.level && data.level <= config.search.levelMaxAllowed) {
+      level = data.level;
+    }
+    if (data.url.length > 0 && data.element.length > 0) {
+        url_str = `/api/search/?url=${data.url}&element=${data.element}&level=${level}`;
+    }
+    return url_str;
+}
+
 function parseQuery(args) {
     const url_str = args.url.value;
     const element = args.element.value;
@@ -93,17 +108,4 @@ function redisClient() {
             return resolve(client);
         });
     });
-}
-
-function processFormData(req) {
-    const data = req.body;
-    let   url_str = '';
-    let   level = config.search.levelDefault;
-    if (data.level && data.level <= config.search.levelMaxAllowed) {
-      level = data.level;
-    }
-    if (data.url.length > 0 && data.element.length > 0) {
-        url_str = `/api/search/?url=${data.url}&element=${data.element}&level=${level}`;
-    }
-    return url_str;
 }

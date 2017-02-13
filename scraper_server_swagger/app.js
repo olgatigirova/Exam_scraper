@@ -31,3 +31,5 @@ swaggerTools.initializeMiddleware(swaggerDoc, function (middleware) {
     console.log('Server is listening on port %d (http://localhost:%d)', serverPort, serverPort);
   });
 });
+
+module.exports = app;

@@ -63,7 +63,7 @@ function getForm(req, res) {
 function searchWithForm(req, res) {
     const url_str = helper.processFormData(req);
     if (url_str.length > 0) {
-        res.redirect(url_str);
+        res.status(200).redirect(url_str);
         log.info(`POST: redirect to ${url_str}`);
     }
     else {

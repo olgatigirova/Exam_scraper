@@ -4,7 +4,7 @@
   "description": "test scraper server",
   "scripts": {
     "start": "node app.js ",
-    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --colors --recursive test/eslint.js test/unit test/integration"
+    "test": "./node_modules/.bin/istanbul cover ./node_modules/mocha/bin/_mocha -- -R spec --colors --recursive test/integration"
   },
   "dependencies": {
     "bluebird": "^3.4.7",
