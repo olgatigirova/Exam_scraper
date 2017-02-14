@@ -16,7 +16,11 @@ class SearchEngine {
 
     if (levelCurrent <= this.levelMax) {
       const html = yield got(url_str);
-      $ = cheerio.load(html.body, { normalizeWhitespace: false, xmlMode: false, decodeEntities: true });
+      $ = cheerio.load(html.body, {
+        normalizeWhitespace: false,
+        xmlMode: false,
+        decodeEntities: true
+      });
       this.getElements($, element);
     }
 
@@ -32,7 +36,7 @@ class SearchEngine {
   getElements($, element) {
     $(element).each((i, el) => {
       let foundEl = $(el).html().toString();
-      foundEl = foundEl.replace(/[\n\r]/g, '').replace(/\s+/g, " ");
+      foundEl = foundEl.replace(/[\n\r]/g, '').replace(/\s+/g, ' ');
       this.result += `[${foundEl}],`;
       log.verbose('--- found tag: ', foundEl);
     });
@@ -40,13 +44,13 @@ class SearchEngine {
 
   getUrls($) {
     const urls = [];
-    const links = $("a");
+    const links = $('a');
 
     links.each((i, link) => {
-      let linkFiltered = $(link).attr("href");
+      let linkFiltered = $(link).attr('href');
       if (typeof linkFiltered !== 'undefined') {
-        linkFiltered = linkFiltered.replace("/url?q=", "").split("&")[0];
-        if (linkFiltered.toLowerCase().startsWith("http") && !this.AllUrls.has(linkFiltered)) {
+        linkFiltered = linkFiltered.replace('/url?q=', '').split('&')[0];
+        if (linkFiltered.toLowerCase().startsWith('http') && !this.AllUrls.has(linkFiltered)) {
           this.AllUrls.add(linkFiltered);
           urls.push(linkFiltered);
         }

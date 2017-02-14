@@ -10,7 +10,7 @@ const app = express();
 const serverPort = config.application.port;
 
 app.use(bodyParser.json());
-app.use(bodyParser.urlencoded({ extended: true })); 
+app.use(bodyParser.urlencoded({ extended: true }));
 
 const options = {
   swaggerUi: '/swagger.json',

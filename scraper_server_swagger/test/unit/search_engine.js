@@ -14,10 +14,9 @@ describe('Search Engine class', function () {
         done();
       })
       .catch(err => {
-        console.log('err = ', err);
         done(err);
       });
-  });
+  }).timeout(5000);
 
   it('should find elements for given url (level2)', done => {
     const search = new SearchEngine(2);
@@ -28,7 +27,6 @@ describe('Search Engine class', function () {
         done();
       })
       .catch(err => {
-        console.log('err = ', err);
         done(err);
       });
   }).timeout(10000);
@@ -37,7 +35,7 @@ describe('Search Engine class', function () {
     const search = new SearchEngine(1);
 
     co(search.SearchDomByUrl(config.TEST_URL_INCORRECT, config.TEST_ELEMENT))
-      .then(res => {
+      .then(() => {
         done(new Error('Error was expected'));
       })
       .catch(err => {

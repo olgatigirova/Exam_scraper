@@ -10,18 +10,6 @@ schemes:
 produces:
 - "application/json"
 paths:
-  /:
-    get:
-      tags:
-      - "/"
-      summary: "Provide search from"
-      description: "Get Search URL form"
-      x-swagger-router-controller: "search"
-      operationId: "getForm"
-      parameters: []
-      responses:
-        200:
-          description: "Form is sent"
   /api/search/:
     get:
       tags:
@@ -55,7 +43,7 @@ paths:
             items:
               $ref: "#/definitions/Search"
         500:
-          description: "Internal Server Error"
+          description: "{\"error\":\"Response code 404 (Not Found)\"}"
     post:
       tags:
       - "/api/search/"
@@ -71,8 +59,8 @@ paths:
         schema:
           $ref: "#/definitions/SearchBody"
       responses:
-        302:
-          description: "Search is accepted"
+        200:
+          description: "Search is done"
         500:
           description: "Error: form has empty fields"
     delete:
@@ -101,7 +89,9 @@ paths:
         default: 2
       responses:
         200:
-          description: "Search is deleted"
+          description: "The search request is deleted."
+        404:
+          description: "The search request is not found. DELETE failed."
         default:
           description: "Unexpected error"
           schema:
@@ -127,10 +117,19 @@ paths:
           description: "Unexpected error"
           schema:
             $ref: "#/definitions/Error"
+  /:
+    get:
+      tags:
+      - "/"
+      summary: "Provide search from"
+      description: "Get Search URL form"
+      x-swagger-router-controller: "search"
+      operationId: "getForm"
+      parameters: []
+      responses:
+        200:
+          description: "Form is sent"
 definitions:
-  List:
-    type: "string"
-    description: "Search history."
   Search:
     type: "object"
     properties:
@@ -152,6 +151,9 @@ definitions:
         type: "string"
         description: "search depth"
     description: "Search object"
+  List:
+    type: "string"
+    description: "Search history."
   Error:
     type: "object"
     properties:
