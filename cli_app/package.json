@@ -1,0 +1,21 @@
+{
+  "name": "scraper_cli",
+  "version": "0.0.1",
+  "description": "Command line tool to send request to scraper server",
+  "preferGlobal": true,
+  "main": "app.js",
+  "bin": {
+    "scraper_cli": "app.js"
+  },
+  "scripts": {
+    "test": "./node_modules/.bin/_mocha --colors test/eslint.js test/unit test/integration"
+  },
+  "dependencies": {
+    "chalk": "^1.1.3",
+    "cli-progress": "^1.3.0",
+    "commander": "^2.9.0",
+    "superagent": "^3.3.2"
+  },
+  "devDependencies": {
+  }
+}
