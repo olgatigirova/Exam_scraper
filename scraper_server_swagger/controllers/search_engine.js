@@ -30,14 +30,14 @@ class SearchEngine {
         yield* this.SearchDomByUrl(urls[i], element, levelCurrent + 1);
       }
     }
-    return this.result;
+    return this.result.replace(/,\s*$/, '');
   }
 
   getElements($, element) {
     $(element).each((i, el) => {
       let foundEl = $(el).html().toString();
       foundEl = foundEl.replace(/[\n\r]/g, '').replace(/\s+/g, ' ');
-      this.result += `[${foundEl}],`;
+      this.result += `[${foundEl}], `;
       log.verbose('--- found tag: ', foundEl);
     });
   }

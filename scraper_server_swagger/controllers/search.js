@@ -15,30 +15,24 @@ module.exports = {
 function searchDom(req, res) {
   co(helper.searchDomGen(req.swagger.params))
     .then(result => {
+      res.status(200).json({data: result});
       log.info('search result: ', result);
-      res.status(200).json({
-        data: result
-      });
     })
     .catch(err => {
+      res.status(500).json({error: err.message});
       log.error('err = ', err.message);
-      res.status(500).json({
-        error: err.message
-      });
     });
 }
 
 function listSearchRequests(req, res) {
   co(helper.listSearchReqsGen())
     .then(result => {
-      log.info('search history: ', result);
       res.status(200).send(result.toString());
+      log.info('search history: ', result);
     })
     .catch(err => {
+      res.status(500).json({error: err.message});
       log.error('err = ', err.message);
-      res.status(500).json({
-        error: err.message
-      });
     });
 }
 
@@ -54,26 +48,34 @@ function deleteSearchRequest(req, res) {
       }
     })
     .catch(err => {
-      res.status(500).json({
-        error: err.message
-      });
+      res.status(500).json({error: err.message});
       log.error('err = ', err.message);
     });
 }
 
 function getForm(req, res) {
-  const html = ejs.render(fs.readFileSync('./views/search-form.ejs').toString(), {});
-  res.status(200).send(html);
-  log.info('GET / request: html form sent');
+  try {
+    const html = ejs.render(fs.readFileSync('./views/search-form.ejs').toString(), {});
+    res.status(200).send(html);
+    log.info('GET / request: html form sent');
+  } catch (err) {
+    res.status(500).json({error: err.message});
+    log.error('err = ', err.message);
+  }
 }
 
 function searchWithForm(req, res) {
-  const url_str = helper.processFormData(req);
-  if (url_str.length > 0) {
-    res.redirect(url_str);
-    log.info(`POST: redirect to ${url_str}`);
-  } else {
-    res.status(500).send('Error: form has empty fields');
-    log.info(`POST: form has empty fields ${url_str}`);
+  try {
+    const url_str = helper.processFormData(req);
+    if (url_str.length > 0) {
+      res.redirect(url_str);
+      log.info(`POST: redirect to ${url_str}`);
+    } else {
+      res.status(500).send('Error: form has empty fields');
+      log.info(`POST: form has empty fields ${url_str}`);
+    }
+  } catch (err) {
+    res.status(500).json({error: err.message});
+    log.error('err = ', err.message);
   }
 }

@@ -67,6 +67,10 @@ paths:
           description: "Search is done"
         500:
           description: "Error: form has empty fields"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
     delete:
       tags:
       - "/api/search/"
@@ -133,6 +137,10 @@ paths:
       responses:
         200:
           description: "Form is sent"
+        default:
+          description: "Unexpected error"
+          schema:
+            $ref: "#/definitions/Error"
 definitions:
   Search:
     type: "object"

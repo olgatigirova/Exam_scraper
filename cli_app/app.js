@@ -15,30 +15,25 @@ command
   .parse(process.argv);
 
 if (command.list) {
-  scraper.searchHistory(); // Exits process
-  process.exit(0);
-}
+  scraper.searchHistory();
+} else {
+  if (!command.url) {
+    console.log(chalk.red('URL parameter is missed.'));
+    process.exit(1);
+  }
+  if (!command.element) {
+    console.log(chalk.red('Element parameter is missed.'));
+    process.exit(1);
+  }
+  if (!command.level) {
+    console.log(`Default level ${LEVEL_DEFAULT} is used.`);
+    command.level = LEVEL_DEFAULT;
+  }
 
-if (!command.url) {
-  console.log(chalk.red('URL parameter is missed.'));
-  process.exit(1);
-}
-
-if (!command.element) {
-  console.log(chalk.red('Element parameter is missed.'));
-  process.exit(1);
-}
-
-if (!command.level) {
-  console.log(`Default level ${LEVEL_DEFAULT} is used.`);
-  command.level = LEVEL_DEFAULT;
-}
-
-const request = scraper.generateRequest(command.url, command.element, command.level);
-
-if (command.delete) {
-  scraper.deleteSearchRequest(request);
-}
-else {
-  scraper.getDomElements(request);
+  const request = scraper.generateRequest(command.url, command.element, command.level);
+  if (command.delete) {
+    scraper.deleteSearchRequest(request);
+  } else {
+    scraper.getDomElements(request);
+  }
 }
