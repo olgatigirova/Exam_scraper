@@ -2,7 +2,7 @@
 swagger: "2.0"
 info:
   description: "API for scraper server"
-  version: "1.0.0"
+  version: "0.0.1"
   title: "Scraper API"
 host: "localhost:3000"
 schemes:

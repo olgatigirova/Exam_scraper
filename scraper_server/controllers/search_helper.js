@@ -15,7 +15,6 @@ module.exports = {
   delSearchKeyGen,
   processFormData,
   parseQuery,
-  redisClient
 };
 
 function *searchDomGen(args) {

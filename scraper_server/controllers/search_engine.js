@@ -16,11 +16,7 @@ class SearchEngine {
 
     if (levelCurrent <= this.levelMax) {
       const html = yield got(url_str);
-      $ = cheerio.load(html.body, {
-        normalizeWhitespace: false,
-        xmlMode: false,
-        decodeEntities: true
-      });
+      $ = cheerio.load(html.body, {normalizeWhitespace: false, xmlMode: false, decodeEntities: true});
       this.getElements($, element);
     }
 

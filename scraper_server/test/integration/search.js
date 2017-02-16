@@ -34,7 +34,7 @@ describe('Search', () => {
       .expect(302, done);
   });
 
-  it('post should return 500 if empty fields', done => {
+  it('post should return 500 if form has empty text fields', done => {
     request
       .post('/api/search/')
       .type('json')
