@@ -10,8 +10,7 @@
 
 ####Scraper server is covered with unit, integration and eslint tests.
 
-####Cli command "scraper_cli" is implemented.
-It executes the following requests:
+####Cli command "scraper_cli" is implemented. It executes the following requests:
 - /api/search/ GET request
 - /api/search/ DELETE request
 - /api/search/list/ GET request
