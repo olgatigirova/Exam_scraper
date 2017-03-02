@@ -33,9 +33,14 @@ function *searchDomGen(args) {
     foundElements = yield* search.SearchDomByUrl(url_str, element);
     yield client.setAsync(searchKey, foundElements);
     yield client.saddAsync(SEARCH_HISTORY_KEY, searchKey);
+    // You can yield client.multi().set().sadd().execAsync() to do the operations as one transaction.
+    // More info https://redis.io/topics/transactions
   }
   yield client.expireAsync(searchKey, getTtl());
-  yield client.quitAsync();
+  yield client.quitAsync(); // So this app opens new connection on every incoming request.
+  // This is usually not the best practice, especially considering that Node.js has async I/O and can handle multiple requests at the time.
+  // Some guys even created this module to prevent this kind of issues https://github.com/dwyl/redis-connection#why
+  // But probably the best practice is to use connectionPool, especially if you use blocking commands like BRPOP or SUBSCRIBE.
 
   return foundElements;
 }
